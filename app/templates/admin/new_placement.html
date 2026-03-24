@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Post New Placement</h2>
+  <a href="{{ url_for('admin.dashboard') }}"
+     class="btn btn-outline-dark btn-sm">Back</a>
+</div>
+
+<div class="row">
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-body">
+        {% if companies %}
+        <form method="POST" action="{{ url_for('admin.new_placement') }}">
+
+          <div class="mb-3">
+            <label class="form-label">Company</label>
+            <select name="company_id" class="form-select" required>
+              <option value="" disabled selected>Select a company</option>
+              {% for c in companies %}
+                <option value="{{ c.id }}">
+                  {{ c.name }} — {{ c.location }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Job Title</label>
+            <input type="text" name="title" class="form-control"
+                   placeholder="e.g. Junior Developer Intern" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control"
+                      rows="4"
+                      placeholder="Describe the role..."></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Duration</label>
+              <input type="text" name="duration" class="form-control"
+                     placeholder="e.g. 6 months">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Available Slots</label>
+              <input type="number" name="slots" class="form-control"
+                     value="1" min="1" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Application Deadline</label>
+            <input type="date" name="deadline" class="form-control" required>
+          </div>
+
+          <button type="submit" class="btn btn-dark w-100">
+            Post Placement
+          </button>
+
+        </form>
+        {% else %}
+          <div class="alert alert-warning">
+            No companies in the database yet.
+            <a href="{{ url_for('admin.new_company') }}">
+              Add a company first.
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Manage Users</h2>
+  <a href="{{ url_for('admin.dashboard') }}"
+     class="btn btn-outline-dark btn-sm">Back</a>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Student No.</th>
+        <th>Registered</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.name }}</td>
+        <td>{{ u.email }}</td>
+        <td>
+          {% if u.role == 'admin' %}
+            <span class="badge bg-dark">Admin</span>
+          {% elif u.role == 'coordinator' %}
+            <span class="badge bg-primary">Coordinator</span>
+          {% else %}
+            <span class="badge bg-secondary">Student</span>
+          {% endif %}
+        </td>
+        <td>{{ u.student_num or '—' }}</td>
+        <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+                <td>
+          {% if not (u.role == 'admin' and u.id == current_user.id) %}
+          <div class="d-flex gap-1">
+            <a href="{{ url_for('admin.edit_user', user_id=u.id) }}"
+               class="btn btn-sm btn-outline-dark">Edit</a>
+            <form method="POST"
+                  action="{{ url_for('admin.delete_user', user_id=u.id) }}"
+                  onsubmit="return confirm('Delete {{ u.name }}? This cannot be undone.')">
+              <button type="submit"
+                      class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+          </div>
+          {% else %}
+            <span class="text-muted small">Protected</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

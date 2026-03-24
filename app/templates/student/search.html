@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2 class="mb-4">Search Placements</h2>
+
+<form method="GET" action="{{ url_for('student.search') }}" class="d-flex gap-2 mb-4">
+  <input type="text" name="q" class="form-control"
+         placeholder="Search by job title..." value="{{ query }}">
+  <button type="submit" class="btn btn-dark">Search</button>
+  <a href="{{ url_for('student.search') }}" class="btn btn-outline-secondary">Clear</a>
+</form>
+
+{% if placements %}
+  <div class="row g-3">
+    {% for p in placements %}
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ p.title }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ p.company.name }}</h6>
+          <p class="card-text">{{ p.description or 'No description provided.' }}</p>
+          <ul class="list-unstyled small text-muted mb-3">
+            <li>Location: {{ p.company.location or 'Not specified' }}</li>
+            <li>Duration: {{ p.duration or 'Not specified' }}</li>
+            <li>Deadline: {{ p.deadline.strftime('%d %b %Y') }}</li>
+            <li>Slots available: {{ p.slots }}</li>
+          </ul>
+          <form method="POST" action="{{ url_for('student.apply', placement_id=p.id) }}">
+            <button type="submit" class="btn btn-dark btn-sm">Apply Now</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="alert alert-info">
+    {% if query %}
+      No placements found for "{{ query }}". <a href="{{ url_for('student.search') }}">Show all placements.</a>
+    {% else %}
+      No placements available at the moment. Check back soon.
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

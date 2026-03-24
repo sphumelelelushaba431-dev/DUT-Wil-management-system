@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Admin Dashboard</h2>
+  <a href="{{ url_for('admin.settings') }}" class="btn btn-outline-dark btn-sm">Account Settings</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="card text-center p-3">
+      <div class="fs-2 fw-bold text-primary">{{ total_students }}</div>
+      <div class="text-muted">Students</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-center p-3">
+      <div class="fs-2 fw-bold text-success">{{ total_placements }}</div>
+      <div class="text-muted">Placements</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-center p-3">
+      <div class="fs-2 fw-bold text-warning">{{ total_companies }}</div>
+      <div class="text-muted">Companies</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card text-center p-3">
+      <div class="fs-2 fw-bold text-info">{{ total_applications }}</div>
+      <div class="text-muted">Applications</div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex gap-2 mb-4 flex-wrap">
+  <a href="{{ url_for('admin.manage_users') }}"
+     class="btn btn-dark">Manage Users</a>
+  <a href="{{ url_for('admin.new_placement') }}"
+     class="btn btn-outline-dark">Post Placement</a>
+  <a href="{{ url_for('admin.new_company') }}"
+     class="btn btn-outline-dark">Add Company</a>
+  <a href="{{ url_for('admin.reports') }}"
+     class="btn btn-outline-dark">View Reports</a>
+  <a href="{{ url_for('admin.manage_companies') }}"
+     class="btn btn-outline-dark">Manage Companies</a>
+</div>
+
+<h5 class="mb-3">Recently Registered Users</h5>
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Name</th><th>Email</th><th>Role</th><th>Registered</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in recent_users %}
+      <tr>
+        <td>{{ u.name }}</td>
+        <td>{{ u.email }}</td>
+        <td>
+          {% if u.role == 'admin' %}
+            <span class="badge bg-dark">Admin</span>
+          {% elif u.role == 'coordinator' %}
+            <span class="badge bg-primary">Coordinator</span>
+          {% else %}
+            <span class="badge bg-secondary">Student</span>
+          {% endif %}
+        </td>
+        <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

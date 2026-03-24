@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+
+    <div class="card shadow-sm mt-4">
+      <div class="card-body p-4">
+        <h3 class="card-title mb-4 text-center">Create Account</h3>
+
+        <form method="POST" action="{{ url_for('auth.register') }}">
+
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-control"
+                   placeholder="e.g. Sipho Ndlovu" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-control"
+                   placeholder="your@email.com" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control"
+                   placeholder="Minimum 8 characters" minlength="8" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Role</label>
+            <select name="role" class="form-select" id="roleSelect"
+                    onchange="toggleStudentNum()" required>
+              <option value="" disabled selected>Select your role</option>
+              <option value="student">Student</option>
+              <option value="coordinator">WIL Coordinator</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+
+          <div class="mb-3" id="studentNumField" style="display:none">
+            <label class="form-label">Student Number</label>
+            <input type="text" name="student_num" class="form-control"
+                   placeholder="e.g. 21012345">
+          </div>
+
+          <button type="submit" class="btn btn-dark w-100 mt-2">
+            Register
+          </button>
+
+        </form>
+
+        <p class="text-center mt-3 mb-0">
+          Already have an account?
+          <a href="{{ url_for('auth.login') }}">Log in here</a>
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function toggleStudentNum() {
+  const role = document.getElementById('roleSelect').value;
+  const field = document.getElementById('studentNumField');
+  field.style.display = role === 'student' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

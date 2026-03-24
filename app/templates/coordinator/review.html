@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Review Application</h2>
+  <a href="{{ url_for('coordinator.dashboard') }}"
+     class="btn btn-outline-dark btn-sm">Back to Dashboard</a>
+</div>
+
+<div class="row g-4">
+
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header bg-dark text-white">Student Details</div>
+      <div class="card-body">
+        <p><strong>Name:</strong> {{ application.student.name }}</p>
+        <p><strong>Email:</strong> {{ application.student.email }}</p>
+        <p><strong>Student No:</strong>
+          {{ application.student.student_num or 'Not provided' }}</p>
+        <p><strong>Applied for:</strong> {{ application.placement.title }}</p>
+        <p><strong>Company:</strong>
+          {{ application.placement.company.name }}</p>
+        <p><strong>Submitted:</strong>
+          {{ application.submitted_at.strftime('%d %b %Y at %H:%M') }}</p>
+        <p><strong>Current status:</strong>
+          <span class="badge bg-secondary">{{ application.status }}</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header bg-dark text-white">Uploaded Documents</div>
+      <div class="card-body">
+        {% set type_labels = {
+          'cv': 'CV / Resume',
+          'motivation': 'Motivational Letter',
+          'id': 'ID Document',
+          'matric': 'Matric Certificate',
+          'proof_of_address': 'Proof of Address'
+        } %}
+        {% set doc_types = ['cv','motivation','id','matric','proof_of_address'] %}
+        {% for dtype in doc_types %}
+          {% set found = documents|selectattr('doc_type','equalto',dtype)|list %}
+          <div class="d-flex justify-content-between align-items-center
+                      border rounded p-2 mb-2">
+            <span>{{ type_labels[dtype] }}</span>
+            {% if found %}
+              <span class="badge bg-success">Uploaded</span>
+            {% else %}
+              <span class="badge bg-danger">Missing</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="card mt-4">
+  <div class="card-header bg-dark text-white">Make a Decision</div>
+  <div class="card-body">
+    <form method="POST"
+          action="{{ url_for('coordinator.decide', app_id=application.id) }}">
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Decision</label>
+        <div class="d-flex gap-2 flex-wrap">
+          <div class="form-check">
+            <input class="form-check-input" type="radio"
+                   name="status" value="Approved" id="s1"
+                   {{ 'checked' if application.status == 'Approved' }}>
+            <label class="form-check-label text-success fw-bold"
+                   for="s1">Approve</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio"
+                   name="status" value="Rejected" id="s2"
+                   {{ 'checked' if application.status == 'Rejected' }}>
+            <label class="form-check-label text-danger fw-bold"
+                   for="s2">Reject</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio"
+                   name="status" value="More Info Needed" id="s3"
+                   {{ 'checked' if application.status == 'More Info Needed' }}>
+            <label class="form-check-label text-warning fw-bold"
+                   for="s3">Request More Info</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio"
+                   name="status" value="Pending" id="s4"
+                   {{ 'checked' if application.status == 'Pending' }}>
+            <label class="form-check-label text-info fw-bold"
+                   for="s4">Mark Pending</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">
+          Feedback / Note to Student <span class="text-muted fw-normal">(optional)</span>
+        </label>
+        <textarea name="feedback" class="form-control" rows="4"
+                  placeholder="Explain your decision or request specific documents...">{{ application.feedback or '' }}</textarea>
+      </div>
+
+      <button type="submit" class="btn btn-dark w-100">
+        Submit Decision & Notify Student
+      </button>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}

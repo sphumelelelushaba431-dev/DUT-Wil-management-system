@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Edit Placement</h2>
+  <a href="{{ url_for('admin.reports') }}" class="btn btn-outline-dark btn-sm">Back</a>
+</div>
+<div class="row">
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-body">
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label">Company</label>
+            <select name="company_id" class="form-select" required>
+              {% for c in companies %}
+                <option value="{{ c.id }}"
+                  {{ 'selected' if c.id == placement.company_id }}>
+                  {{ c.name }} — {{ c.location }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Job Title</label>
+            <input type="text" name="title" class="form-control"
+                   value="{{ placement.title }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control"
+                      rows="4">{{ placement.description or '' }}</textarea>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Duration</label>
+              <input type="text" name="duration" class="form-control"
+                     value="{{ placement.duration or '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Slots</label>
+              <input type="number" name="slots" class="form-control"
+                     value="{{ placement.slots }}" min="1" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Deadline</label>
+            <input type="date" name="deadline" class="form-control"
+                   value="{{ placement.deadline.strftime('%Y-%m-%d') }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select name="is_active" class="form-select">
+              <option value="1" {{ 'selected' if placement.is_active }}>Active</option>
+              <option value="0" {{ 'selected' if not placement.is_active }}>Closed</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-dark w-100">Save Changes</button>
+        </form>
+        <hr>
+        <form method="POST"
+              action="{{ url_for('admin.delete_placement', placement_id=placement.id) }}"
+              onsubmit="return confirm('WARNING: This will also delete all student applications linked to this placement. Are you sure?')">
+          <button type="submit" class="btn btn-outline-danger w-100">
+            Delete This Placement
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

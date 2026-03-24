@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-8 text-center mt-5">
+
+    <h1 class="display-5 fw-bold mb-3">
+      DUT WIL Management System
+    </h1>
+    <p class="lead text-muted mb-2">
+      Durban University of Technology
+    </p>
+    <p class="text-muted mb-5">
+      Group 15 &mdash; Tech Titans
+    </p>
+
+    <div class="row g-3 justify-content-center mb-5">
+      <div class="col-md-4">
+        <div class="card p-4 h-100">
+          <h5 class="fw-bold mb-2">Students</h5>
+          <p class="text-muted small mb-3">
+            Search internships, apply for placements,
+            upload documents and track your applications.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-4 h-100">
+          <h5 class="fw-bold mb-2">WIL Coordinators</h5>
+          <p class="text-muted small mb-3">
+            Review student applications, approve or reject
+            placements and send feedback automatically.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-4 h-100">
+          <h5 class="fw-bold mb-2">Administrators</h5>
+          <p class="text-muted small mb-3">
+            Manage users, post internship opportunities
+            and generate placement reports.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-3 justify-content-center">
+      <a href="{{ url_for('auth.login') }}"
+         class="btn btn-dark btn-lg px-5">
+        Log In
+      </a>
+      <a href="{{ url_for('auth.register') }}"
+         class="btn btn-outline-dark btn-lg px-5">
+        Register
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
